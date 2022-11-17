@@ -6,8 +6,10 @@ import com.example.chatbot.Module.ChatProcess;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -126,9 +128,16 @@ public class Chat extends VBox {
         /***
          * Settings
          */
+        VBox sendText = new VBox();
+        TextArea area = new TextArea();
+        area.setText("Enter your text here");
+        area.setPrefColumnCount(10);
+        Button sendTextbtn = new Button("Send");
+        sendText.getChildren().addAll(area, sendTextbtn);
         this.setMinHeight(700);
         this.setMinWidth(500);
         this.setBorder(Border.stroke(Color.BLACK));
+        this.getChildren().add(sendText);
     }
     public String getUsername() {
         return username.getText();
