@@ -82,4 +82,29 @@ public class ChatProcess {
             throw new RuntimeException(e);
         }
     }
+    public static void SendText(String value){
+        try {
+//            Socket socket = new Socket("127.0.0.1", 3002);
+            Socket socket = new Socket("192.168.1.112", 3002);
+            System.out.println("Connected.");
+            // writing to server
+            PrintWriter out = new PrintWriter(
+                    socket.getOutputStream(), true);
+            // reading from server
+            BufferedReader in
+                    = new BufferedReader(new InputStreamReader(
+                    socket.getInputStream()));
+//            String line = "";
+            String result = "";
+            out.println(value);
+            result = in.readLine();
+            System.out.println("chatproces Send data: " + result);
+            out.close();
+            in.close();
+            socket.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -9,8 +9,8 @@ import java.net.Socket;
 public class UserModule {
     public static String getUserById(String value){
         try {
-            Socket socket = new Socket("127.0.0.1", 3001);
-//            Socket socket = new Socket("192.168.1.112", 3001);
+//            Socket socket = new Socket("127.0.0.1", 3001);
+            Socket socket = new Socket("192.168.1.112", 3001);
             System.out.println("getByUserById Connected.");
             // writing to server
             PrintWriter out = new PrintWriter(

@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +31,8 @@ public class Chat extends VBox {
     private ScrollPane sp = null;
     private String my_id = "";
     private String friend_id = "1234zsdlk32333";
-    private boolean stoped = true;
+    private TextArea getSendText;
+    private Button sendTextbtn;
     public Chat(Users user, Context context){
         this.my_id = user.get_user_id();
         CreateInterFace();
@@ -38,8 +41,8 @@ public class Chat extends VBox {
             public void run() {
                 Socket socket = null;
                 try {
-                    socket = new Socket("127.0.0.1", 3002);
-                    //Socket socket = new Socket("192.168.1.112", 3002);
+//                    socket = new Socket("127.0.0.1", 3002);
+                    socket = new Socket("192.168.1.112", 3002);
                     System.out.println("Connected.");
                     // writing to server
                     PrintWriter out = new PrintWriter(
@@ -56,31 +59,38 @@ public class Chat extends VBox {
                         result = in.readLine();
                         String[] turshilt = result.split("=");
                         List<List<String>> listOfLists = new ArrayList<>();
-                        HBox gg[] = new HBox[50];
+                        HBox showChat[] = new HBox[50];
                         Circle circle = null;
                         Label chatt = null;
-                        chatt = new Label("Hi");
                         for(String g: turshilt){
                             listOfLists.add(List.of(g.split(",")));
                         }
-//                        System.out.println(listOfLists);
+                        System.out.println(listOfLists);
                         VBox vBox = new VBox();
                         vBox.setPrefSize(480, 600);
                         int counter = 0;
                         for(List s: listOfLists){
-                            if(s.get(4).equals(my_id)){
-                                chatt = new Label((String) s.get(0));
-                                gg[counter] = new HBox(chatt);
-                                gg[counter].setAlignment(Pos.CENTER_RIGHT);
-                            }else {
-                                circle = new Circle(0 ,0, 10);
-                                chatt = new Label((String) s.get(0));
-                                gg[counter] = new HBox(circle, chatt);
-                                gg[counter].setAlignment(Pos.CENTER_LEFT);
+                            if(s.size() > 1){
+                                if(s.get(4).equals(my_id)){
+                                    chatt = new Label((String) s.get(0));
+                                    chatt.setPadding(new Insets(5, 10, 5, 10));
+                                    chatt.setStyle("-fx-background-color: #D9D9D9; -fx-background-radius: 10;");
+                                    showChat[counter] = new HBox(chatt);
+                                    showChat[counter].setAlignment(Pos.CENTER_RIGHT);
+                                }else {
+                                    circle = new Circle(0 ,0, 15);
+                                    chatt = new Label((String) s.get(0));
+                                    chatt.setPadding(new Insets(5, 10, 5, 10));
+                                    chatt.setStyle("-fx-background-color: #794ADD; -fx-background-radius: 10; -fx-text-fill : #ffffff");
+                                    showChat[counter] = new HBox(circle, chatt);
+                                    showChat[counter].setAlignment(Pos.CENTER_LEFT);
+                                    showChat[counter].setSpacing(5);
+                                }
+                                vBox.getChildren().add(showChat[counter]);
+                                vBox.setPadding(new Insets(20));
+                                vBox.setSpacing(5);
+                                counter++;
                             }
-                            vBox.getChildren().add(gg[counter]);
-                            vBox.setPadding(new Insets(20));
-                            counter++;
                         }
                         Platform.runLater(new Runnable() {
                             @Override
@@ -107,6 +117,22 @@ public class Chat extends VBox {
                 }
             }
         }).start();
+        sendTextbtn.setOnAction(actionEvent -> {
+            String text = getSendText.getText().replaceAll("\n", " ");
+            if(text.equals("")){
+                System.out.println("text hooson bna");
+            }else {
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime dateF = LocalDateTime.now();
+                String dateNow = dtf.format(dateF);
+                String sendData = text + "=" +  "" + "=" + dateNow  + "=" + dateNow + "=" + getMy_id() + "=" + getFriend_id();
+                System.out.println("Send text: " + sendData);
+                ChatProcess.SendText(sendData);
+//                String[] f = sendData.split("=");
+//                System.out.println(f[0]);
+                getSendText.clear();
+            }
+        });
     }
     private void CreateInterFace(){
         HBox hb = new HBox();
@@ -125,15 +151,18 @@ public class Chat extends VBox {
         sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         this.getChildren().add(sp);
+        sp.setStyle("-fx-focus-color:  #d9d9d9;");
         /***
          * Settings
          */
         VBox sendText = new VBox();
-        TextArea area = new TextArea();
-        area.setText("Enter your text here");
-        area.setPrefColumnCount(10);
-        Button sendTextbtn = new Button("Send");
-        sendText.getChildren().addAll(area, sendTextbtn);
+        getSendText = new TextArea();
+        getSendText.setPromptText("Enter your text here");
+        getSendText.setPrefColumnCount(2);
+        getSendText.setPrefHeight(70);
+        sendTextbtn = new Button("Send");
+        sendTextbtn.setAlignment(Pos.CENTER_RIGHT);
+        sendText.getChildren().addAll(getSendText, sendTextbtn);
         this.setMinHeight(700);
         this.setMinWidth(500);
         this.setBorder(Border.stroke(Color.BLACK));

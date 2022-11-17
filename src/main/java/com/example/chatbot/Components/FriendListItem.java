@@ -3,6 +3,7 @@ package com.example.chatbot.Components;
 import com.example.chatbot.Module.UserModule;
 import com.example.chatbot.section.Chat;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -48,5 +49,8 @@ public class FriendListItem extends HBox {
         this.setMinWidth(220);
         this.setSpacing(60);
         this.setAlignment(Pos.CENTER);
+        this.setPadding(new Insets(10));
+        this.setOnMouseEntered(e -> this.setStyle("-fx-background-color: #d9d9d9"));
+        this.setOnMouseExited(e -> this.setStyle("-fx-background-color: transparent"));
     }
 }

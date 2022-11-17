@@ -21,7 +21,7 @@ public class FriendList extends VBox {
         ScrollPane sp = CreateInterFace();
         // create friend list interface
         VBox lists = new VBox();
-        lists.setSpacing(10);
+        lists.setSpacing(0);
         String list[] = {"1234zsdlk32333", "1234zsdlk32334"};
         FriendListItem[] fli = new FriendListItem[list.length];
         int fl = 0;
@@ -71,6 +71,9 @@ public class FriendList extends VBox {
         sp.setContent(null);
         sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        // Style sheet
+        sp.setStyle("-fx-focus-color: #d9d9d9;");
+
         return sp;
     }
 }

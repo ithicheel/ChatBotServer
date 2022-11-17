@@ -40,16 +40,16 @@ public class Controller extends VBox {
         ImageView settingView = new ImageView(settingsimg);
         ImageView exitView = new ImageView(exitimg);
         // image size setup
-        homeView.setFitHeight(30);
-        homeView.setFitWidth(30);
-        notView.setFitHeight(30);
-        notView.setFitWidth(30);
-        addUserView.setFitHeight(30);
-        addUserView.setFitWidth(30);
-        settingView.setFitHeight(30);
-        settingView.setFitWidth(30);
-        exitView.setFitHeight(30);
-        exitView.setFitWidth(30);
+        homeView.setFitHeight(25);
+        homeView.setFitWidth(25);
+        notView.setFitHeight(25);
+        notView.setFitWidth(25);
+        addUserView.setFitHeight(25);
+        addUserView.setFitWidth(25);
+        settingView.setFitHeight(25);
+        settingView.setFitWidth(25);
+        exitView.setFitHeight(25);
+        exitView.setFitWidth(25);
         // Icon Button uusgej
         ChatButton homeBtn = new ChatButton("", homeView, "home");
         ChatButton notBtn= new ChatButton("", notView, "notification");
