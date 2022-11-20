@@ -30,7 +30,7 @@ public class Chat extends VBox {
     private Label username = null;
     private ScrollPane sp = null;
     private String my_id = "";
-    private String friend_id = "1234zsdlk32333";
+    private String friend_id = "";
     private TextArea getSendText;
     private Button sendTextbtn;
     public Chat(Users user, Context context){
@@ -65,7 +65,7 @@ public class Chat extends VBox {
                         for(String g: turshilt){
                             listOfLists.add(List.of(g.split(",")));
                         }
-                        System.out.println(listOfLists);
+//                        System.out.println(listOfLists);
                         VBox vBox = new VBox();
                         vBox.setPrefSize(480, 600);
                         int counter = 0;

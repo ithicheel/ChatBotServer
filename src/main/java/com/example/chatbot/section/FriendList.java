@@ -1,6 +1,8 @@
 package com.example.chatbot.section;
 
+import com.example.chatbot.Classes.Users;
 import com.example.chatbot.Components.FriendListItem;
+import com.example.chatbot.Module.UserModule;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
@@ -16,13 +18,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class FriendList extends VBox {
-    public FriendList(Chat chat) throws FileNotFoundException {
+    public FriendList(Chat chat, Users users) throws FileNotFoundException {
         // create interface
         ScrollPane sp = CreateInterFace();
+        String getFriendListAvahUtga = users.get_user_id() + "=getBiId=getName";
+        String list[] = UserModule.getFriendList(getFriendListAvahUtga).split(",");
+        String[] friend_info = UserModule.getUserById(list[0]).split(",");
+        chat.setUsername(friend_info[1]);
+        chat.setFriend_id(list[0]);
         // create friend list interface
         VBox lists = new VBox();
         lists.setSpacing(0);
-        String list[] = {"1234zsdlk32333", "1234zsdlk32334"};
         FriendListItem[] fli = new FriendListItem[list.length];
         int fl = 0;
         for(String i : list){

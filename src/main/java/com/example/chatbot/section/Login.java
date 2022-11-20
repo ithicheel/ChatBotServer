@@ -45,7 +45,7 @@ public class Login extends Stage {
                 try {
                     controller = new Controller();
                     chat = new Chat(user, context);
-                    fl = new FriendList(chat);
+                    fl = new FriendList(chat, user);
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 }
