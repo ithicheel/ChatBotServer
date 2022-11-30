@@ -13,7 +13,7 @@ import java.io.FileNotFoundException;
 public class Controller extends VBox {
     public Controller() throws FileNotFoundException {
         CreateInterFace();
-        // Controller setup
+        // Controller style
         this.setSpacing(30);
         this.setMinHeight(700);
         this.setMinWidth(70);

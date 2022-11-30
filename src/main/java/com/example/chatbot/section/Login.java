@@ -3,6 +3,9 @@ package com.example.chatbot.section;
 import com.example.chatbot.Classes.Context;
 import com.example.chatbot.Classes.Users;
 import com.example.chatbot.Module.LoginProcess;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -11,9 +14,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import com.mashape.unirest.http.Unirest;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
 
 public class Login extends Stage {
     private Button loginBtn = null;
@@ -27,6 +32,16 @@ public class Login extends Stage {
         loginBtn.setOnAction(actionEvent -> {
             String ff = utf.getText() + "=" + ptf.getText();
             LoginProcess loginProcess = new LoginProcess(ff);
+            try {
+
+                HttpResponse<JsonNode> apiResponse = Unirest.get("https://internom.mn/_next/data/aUECSVcUpvLS2820ZVL8g/person/726.json?id=726")
+                        .header("accept", "application/json")
+                        .asJson();
+                String responseJsonAsString = apiResponse.getBody().toString();
+                System.out.println(responseJsonAsString);
+            } catch (UnirestException e) {
+                throw new RuntimeException(e);
+            }
             String result = loginProcess.LoginServer();
             if(result == null){
                 System.out.println("Aldaa garlaa login hiihed null irsen");
@@ -72,8 +87,8 @@ public class Login extends Stage {
     private HBox CreateInterFace(){
         Label username = new Label("Email");
         Label password = new Label("Password");
-         utf = new TextField();
-         ptf = new TextField();
+        utf = new TextField();
+        ptf = new TextField();
         utf.setText("bat44512@gmail.com");
         ptf.setText("12345678");
         loginBtn  = new Button("Login");

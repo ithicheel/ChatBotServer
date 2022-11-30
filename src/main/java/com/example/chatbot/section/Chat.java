@@ -69,42 +69,39 @@ public class Chat extends VBox {
                         VBox vBox = new VBox();
                         vBox.setPrefSize(480, 600);
                         int counter = 0;
-                        for(List s: listOfLists){
-                            if(s.size() > 1){
-                                if(s.get(4).equals(my_id)){
-                                    chatt = new Label((String) s.get(0));
-                                    chatt.setPadding(new Insets(5, 10, 5, 10));
-                                    chatt.setStyle("-fx-background-color: #D9D9D9; -fx-background-radius: 10;");
-                                    showChat[counter] = new HBox(chatt);
-                                    showChat[counter].setAlignment(Pos.CENTER_RIGHT);
-                                }else {
-                                    circle = new Circle(0 ,0, 15);
-                                    chatt = new Label((String) s.get(0));
-                                    chatt.setPadding(new Insets(5, 10, 5, 10));
-                                    chatt.setStyle("-fx-background-color: #794ADD; -fx-background-radius: 10; -fx-text-fill : #ffffff");
-                                    showChat[counter] = new HBox(circle, chatt);
-                                    showChat[counter].setAlignment(Pos.CENTER_LEFT);
-                                    showChat[counter].setSpacing(5);
+                        if(listOfLists.get(0).size() > 1){
+                            for(List s: listOfLists){
+                                if(s.size() > 1){
+                                    if(s.get(4).equals(my_id)){
+                                        chatt = new Label((String) s.get(0));
+                                        chatt.setPadding(new Insets(5, 10, 5, 10));
+                                        chatt.setStyle("-fx-background-color: #D9D9D9; -fx-background-radius: 10;");
+                                        showChat[counter] = new HBox(chatt);
+                                        showChat[counter].setAlignment(Pos.CENTER_RIGHT);
+                                    }else {
+                                        circle = new Circle(0 ,0, 15);
+                                        chatt = new Label((String) s.get(0));
+                                        chatt.setPadding(new Insets(5, 10, 5, 10));
+                                        chatt.setStyle("-fx-background-color: #794ADD; -fx-background-radius: 10; -fx-text-fill : #ffffff");
+                                        showChat[counter] = new HBox(circle, chatt);
+                                        showChat[counter].setAlignment(Pos.CENTER_LEFT);
+                                        showChat[counter].setSpacing(5);
+                                    }
+                                    vBox.getChildren().add(showChat[counter]);
+                                    vBox.setPadding(new Insets(20));
+                                    vBox.setSpacing(5);
+                                    counter++;
                                 }
-                                vBox.getChildren().add(showChat[counter]);
-                                vBox.setPadding(new Insets(20));
-                                vBox.setSpacing(5);
-                                counter++;
                             }
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    sp.setContent(vBox);
+                                }
+                            });
                         }
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                sp.setContent(vBox);
-                                try {
-                                    Thread.sleep(10);
-                                } catch (InterruptedException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            }
-                        });
                         try {
-                            Thread.sleep(10);
+                            Thread.sleep(500);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
