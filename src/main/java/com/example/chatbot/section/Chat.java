@@ -41,8 +41,8 @@ public class Chat extends VBox {
             public void run() {
                 Socket socket = null;
                 try {
-                    socket = new Socket("127.0.0.1", 3002);
-//                    socket = new Socket("192.168.1.112", 3002);
+//                    socket = new Socket("127.0.0.1", 3002);
+                    socket = new Socket("192.168.1.112", 3002);
                     System.out.println("Connected.");
                     // writing to server
                     PrintWriter out = new PrintWriter(
@@ -69,9 +69,6 @@ public class Chat extends VBox {
                         VBox vBox = new VBox();
                         vBox.setPrefSize(480, 600);
                         int counter = 0;
-//                        if(listOfLists.get(0)) {
-//                            System.out.println("zzz");
-//                        }
                         for(List s: listOfLists){
                             if(s.size() > 1){
                                 if(s.get(4).equals(my_id)){
@@ -99,16 +96,15 @@ public class Chat extends VBox {
                             @Override
                             public void run() {
                                 sp.setContent(vBox);
+                                try {
+                                    Thread.sleep(10);
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
                             }
                         });
-
-//                        long expectedtime = System.currentTimeMillis();
-//                        expectedtime += 1000;
-//                        while (System.currentTimeMillis() < expectedtime) {
-//
-//                        }
                         try {
-                            Thread.sleep(500);
+                            Thread.sleep(10);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }

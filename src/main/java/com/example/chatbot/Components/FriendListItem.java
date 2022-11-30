@@ -22,7 +22,6 @@ public class FriendListItem extends HBox {
         this.friend_info = UserModule.getUserById(this.friend_id).split(",");
         CreateInterFace();
         setupInfo();
-
         this.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {

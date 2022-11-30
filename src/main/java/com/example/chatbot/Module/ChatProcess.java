@@ -20,8 +20,8 @@ public class ChatProcess {
     public static void ChatServer(String my_id, String friend_id, ScrollPane sp){
         int counter = 0;
         try {
-            Socket socket = new Socket("127.0.0.1", 3002);
-//            Socket socket = new Socket("192.168.1.112", 3002);
+//            Socket socket = new Socket("127.0.0.1", 3002);
+            Socket socket = new Socket("192.168.1.112", 3002);
             System.out.println("Connected.");
             // writing to server
             PrintWriter out = new PrintWriter(
