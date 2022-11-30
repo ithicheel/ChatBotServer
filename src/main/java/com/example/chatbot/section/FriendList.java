@@ -2,7 +2,10 @@ package com.example.chatbot.section;
 
 import com.example.chatbot.Classes.Users;
 import com.example.chatbot.Components.FriendListItem;
-import com.example.chatbot.Module.UserModule;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
@@ -13,23 +16,40 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class FriendList extends VBox {
     public FriendList(Chat chat, Users users) throws FileNotFoundException {
         // create interface
         ScrollPane sp = CreateInterFace();
-        String getFriendListAvahUtga = users.get_user_id() + "=getBiId=getName";
-        String list[] = UserModule.getFriendList(getFriendListAvahUtga).split(",");
-        String[] friend_info = UserModule.getUserById(list[0]).split(",");
-        chat.setUsername(friend_info[1]);
-        chat.setFriend_id(list[0]);
+        // get friend list
+        ArrayList<String> list = new ArrayList<>();
+        String url = "http://localhost:8080/user/friendlist/" + users.get_user_id();
+        try {
+            HttpResponse<JsonNode> apiResponse = Unirest.get(url)
+                    .header("accept", "application/json")
+                    .asJson();
+            JSONArray responseJsonAsString = apiResponse.getBody().getArray();
+            if(responseJsonAsString.length() > 1){
+                for(int i = 0; i<responseJsonAsString.length() - 1; i++){
+                    list.add(responseJsonAsString.get(i).toString());
+                }
+            }else {
+                System.out.println("friend list avahad aldaa garlaa.");
+            }
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
+        }
+        chat.setFriend_id(list.get(0));
         // create friend list interface
         VBox lists = new VBox();
         lists.setSpacing(0);
-        FriendListItem[] fli = new FriendListItem[list.length];
+        FriendListItem[] fli = new FriendListItem[list.size()];
         int fl = 0;
         for(String i : list){
             fli[fl] = new FriendListItem(i, chat);
