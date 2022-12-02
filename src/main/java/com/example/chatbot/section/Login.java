@@ -37,9 +37,6 @@ public class Login extends Stage {
                 JSONArray responseJsonAsString = apiResponse.getBody().getArray();
                 if(responseJsonAsString.length() == 1) {
                     JSONObject msg = responseJsonAsString.getJSONObject(0);
-                    if(msg.get("status").equals(false)){
-                        System.out.println("Ddd");
-                    }
                 }else if(responseJsonAsString.length() == 2) {
                     JSONObject info = responseJsonAsString.getJSONObject(0);
                     Users user = new Users(
