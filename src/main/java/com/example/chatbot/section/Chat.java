@@ -2,6 +2,7 @@ package com.example.chatbot.section;
 
 import com.example.chatbot.Classes.Context;
 import com.example.chatbot.Classes.Users;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -15,6 +16,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class Chat extends VBox {
     private Label username = null;
@@ -26,9 +30,11 @@ public class Chat extends VBox {
     private Button sendTextbtn;
     private boolean sendMsg = false;
     private boolean firstData = true;
-    public Chat(Users user, Context context){
+    private Context context;
+    public Chat(Users user, Context context1){
         this.my_id = user.get_user_id();
         CreateInterFace();
+        this.context = context1;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -36,7 +42,6 @@ public class Chat extends VBox {
                 client.run();
             }
         }).start();
-        System.out.println("fsdfsdfsdfkhsfskhfslkfhsf=" + getFriend_id());
         sendTextbtn.setOnAction(actionEvent -> {
             if(!getSendText.getText().equals("")){
                 sendMsg = true;
@@ -60,6 +65,46 @@ public class Chat extends VBox {
                 String inMessage;
                 while((inMessage = in.readLine()) != null){
                     System.out.println("Server to message: " + inMessage);
+//                    ArrayList<ArrayList> chats = new ArrayList<>();
+                    String[] chats = inMessage.split("=");
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            VBox showChat = new VBox();
+                            for(String chat : chats){
+                                String[] chatInfos = chat.split("#");
+                                if(chatInfos.length > 1){
+                                    HBox stf = new HBox();
+                                    Label l_chat = new Label();
+                                    if(chatInfos[4].equals(getMy_id())){
+                                        l_chat.setText(chatInfos[0]);
+                                        l_chat.setStyle(
+                                                "-fx-text-fill: white;" +
+                                                "-fx-background-color: #9516b8;" +
+                                                "-fx-padding: 5 10 5 10;" +
+                                                "-fx-background-radius: 15;"
+                                        );
+                                        stf.setAlignment(Pos.CENTER_RIGHT);
+                                    }else {
+                                        l_chat.setText(chatInfos[0]);
+                                        l_chat.setStyle(
+                                                        "-fx-text-fill: white;" +
+                                                        "-fx-background-color: #0b2eb8;" +
+                                                        "-fx-padding: 5 10 5 10;" +
+                                                        "-fx-background-radius: 15;"
+                                        );
+                                        stf.setAlignment(Pos.CENTER_LEFT);
+                                    }
+                                    stf.getChildren().add(l_chat);
+                                    showChat.getChildren().add(stf);
+                                }
+                            }
+                            showChat.setPrefWidth(435);
+                            sp.setContent(showChat);
+                        }
+                    });
+
+
                 }
             } catch (Exception e){
                 // TODO: handle
@@ -84,7 +129,6 @@ public class Chat extends VBox {
                 try {
 //                    BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
                     String id = getMy_id()+"="+ getFriend_id();
-                    String info = "=dsdsds=2022-06-23 14:50:30=2022-06-23 14:50:30=zxcv1234zxcv1234=1234zsdlk32333";
                     if(getFriend_id().equals("")){
                         if(!getFriend_id().equals("ff")){
                             System.out.println("sdd=" + getFriend_id());
@@ -94,28 +138,45 @@ public class Chat extends VBox {
                         firstData = false;
                     }
                     while(!done){
-//                        System.out.println("t=" + getFriend_id() );
-                        if(!getFriend_id().equals("")){
-//                            System.out.println("DSds");
-                            if(firstData){
-                                System.out.println("sssssssssssss=" + getFriend_id());
-                                out.println(getMy_id() + "=" + getFriend_id());
-                                firstData = false;
-                            }
-//                            String message = inReader.readLine();
-                            if(sendMsg){
-                                if(changeFriend_id.startsWith("/quit")){
-                                    out.println("exit=" +id);
-//                                    inReader.close();
-                                    shutdown();
-                                }if(changeFriend_id.startsWith("/changeToId")){
-                                    out.println("/changeToId" + getFriend_id());
-                                } else {
-                                    out.println(getSendText.getText() + info);
+                        if(context.getMainStoped()){
+                            out.println("/quit");
+                            shutdown();
+                        }else {
+                            if(!getFriend_id().equals("")) {
+                                if (firstData) {
+                                    System.out.println("sssssssssssss=" + getFriend_id());
+                                    out.println(getMy_id() + "=" + getFriend_id());
+                                    firstData = false;
                                 }
-                                sendMsg = false;
+                                if (sendMsg) {
+                                    System.out.println("send message:" + getSendText.getText());
+                                    String message = getSendText.getText();
+                                    String content = "";
+                                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                                    LocalDateTime dateF = LocalDateTime.now();
+                                    String dateNow = dtf.format(dateF);
+                                    String seenDate = dateNow;
+                                    String sendDate = dateNow;
+                                    String my_id = getMy_id();
+                                    String friend_id = getFriend_id();
+                                    String info =
+                                            message +"="+
+                                            content +"="+
+                                            seenDate +"="+
+                                            sendDate+"="+
+                                            my_id +"="+
+                                            friend_id;
+                                    out.println(info);
+                                    sendMsg = false;
+                                    getSendText.setText("");
+                                }else if (getChangeFriend_id().startsWith("/changeToId")) {
+                                    System.out.println("change id");
+                                    out.println("/changeToId=" + getFriend_id());
+                                    setChangeFriend_id("");
+                                }
                             }
                         }
+                        Thread.sleep(50);
                     }
                 } catch (Exception e){
                     shutdown();
@@ -142,8 +203,8 @@ public class Chat extends VBox {
         this.getChildren().add(hb);
         // Scroll panel
         sp = new ScrollPane();
-        sp.setPadding(new Insets(20, 0, 0 ,0));
-        sp.setPrefSize(360, 500);
+        sp.setPadding(new Insets(20, 20, 20,20));
+        sp.setPrefSize(500, 500);
         sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         this.getChildren().add(sp);
@@ -176,7 +237,20 @@ public class Chat extends VBox {
     }
     public void setFriend_id(String friend_id) {
         this.friend_id = friend_id;
+        if(!firstData){
+            System.out.println("ccc: " + getFriend_id());
+            setChangeFriend_id("/changeToId");
+        }
     }
+
+    public String getChangeFriend_id() {
+        return changeFriend_id;
+    }
+
+    public void setChangeFriend_id(String changeFriend_id) {
+        this.changeFriend_id = changeFriend_id;
+    }
+
     public void setMy_id(String my_id) {
         this.my_id = my_id;
     }

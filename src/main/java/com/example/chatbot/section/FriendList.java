@@ -45,7 +45,7 @@ public class FriendList extends VBox {
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }
-        chat.setFriend_id(list.get(0));
+//        chat.setFriend_id(list.get(0));
         // create friend list interface
         VBox lists = new VBox();
         lists.setSpacing(0);
