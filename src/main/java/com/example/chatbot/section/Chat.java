@@ -57,6 +57,7 @@ public class Chat extends VBox {
         public void run() {
             try {
                 client = new Socket("127.0.0.1", 8081);
+//                client = new Socket("192.168.1.112", 8081);
                 out = new PrintWriter(client.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 InputHandler inputHandler = new InputHandler();
@@ -73,9 +74,11 @@ public class Chat extends VBox {
                             VBox showChat = new VBox();
                             for(String chat : chats){
                                 String[] chatInfos = chat.split("#");
+
                                 if(chatInfos.length > 1){
                                     HBox stf = new HBox();
                                     Label l_chat = new Label();
+
                                     if(chatInfos[4].equals(getMy_id())){
                                         l_chat.setText(chatInfos[0]);
                                         l_chat.setStyle(
@@ -86,12 +89,17 @@ public class Chat extends VBox {
                                         );
                                         stf.setAlignment(Pos.CENTER_RIGHT);
                                     }else {
-                                        l_chat.setText(chatInfos[0]);
+                                        if(getFriend_id().startsWith("gp")){
+                                            l_chat.setText(chatInfos[4] + " : " + chatInfos[0]);
+                                        }else {
+                                            l_chat.setText(chatInfos[0]);
+                                        }
                                         l_chat.setStyle(
                                                         "-fx-text-fill: white;" +
                                                         "-fx-background-color: #0b2eb8;" +
                                                         "-fx-padding: 5 10 5 10;" +
                                                         "-fx-background-radius: 15;"
+
                                         );
                                         stf.setAlignment(Pos.CENTER_LEFT);
                                     }
@@ -100,11 +108,10 @@ public class Chat extends VBox {
                                 }
                             }
                             showChat.setPrefWidth(435);
+                            showChat.setSpacing(5);
                             sp.setContent(showChat);
                         }
                     });
-
-
                 }
             } catch (Exception e){
                 // TODO: handle

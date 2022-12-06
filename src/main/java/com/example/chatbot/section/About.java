@@ -6,13 +6,25 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 public class About extends VBox {
+    Label about = null;
+    Label username = null;
+    Label desc = null;
+    Label email = null;
+    Label status = null;
     public About(Users user){
-        Label about = new Label("About");
+        creatInterFace();
+        username.setText("Username: "+ user.get_username());
+        desc.setText("Description: "+ user.get_desc());
+        email.setText("Email: " + user.get_email());
+
+    }
+    private void creatInterFace(){
+        about = new Label("About");
         about.setPadding(new Insets(10,0, 10, 20));
-        Label username = new Label("Username: "+ user.get_username());
-        Label desc = new Label("Description"+ user.get_desc());
-        Label email = new Label("Email: " + user.get_email());
-        Label status = new Label("Status: online");
+        username = new Label("Username: ");
+        desc = new Label("Description");
+        email = new Label("Email: ");
+        status = new Label("Status: online");
         this.getChildren().add(about);
         this.getChildren().add(username);
         this.getChildren().add(desc);

@@ -22,40 +22,68 @@ public class FriendListItem extends HBox {
     private Label username = null;
     private Label lastChat = null;
     private Label lastChatDate = null;
-    private String friend_id = "";
+    private String[] friend_id = null;
     private ArrayList<String> friend_info = new ArrayList<>();
-    public FriendListItem(String friend_id, Chat chat){
-        this.friend_id = friend_id;
+    public FriendListItem(String friend_id1, Chat chat){
+        this.friend_id = friend_id1.split("=");
         CreateInterFace();
-        String url = "http://localhost:8080/user/" + friend_id;
-        try {
-            HttpResponse<JsonNode> apiResponse = Unirest.get(url)
-                    .header("accept", "application/json")
-                    .asJson();
-            JSONArray responseJsonAsString = apiResponse.getBody().getArray();
-            if(responseJsonAsString.length() == 1) {
-                JSONObject msg = responseJsonAsString.getJSONObject(0);
-                if(msg.get("status").equals(false)){
-                    System.out.println("Ddd");
+        if(friend_id[0].equals("fr")){
+            String url = "http://localhost:8080/user/" + friend_id[1];
+//        String url = "http://192.168.1.112:8080/user/" + friend_id;
+            try {
+                HttpResponse<JsonNode> apiResponse = Unirest.get(url)
+                        .header("accept", "application/json")
+                        .asJson();
+                JSONArray responseJsonAsString = apiResponse.getBody().getArray();
+                if(responseJsonAsString.length() == 1) {
+                    JSONObject msg = responseJsonAsString.getJSONObject(0);
+                    if(msg.get("status").equals(false)){
+                        System.out.println("Ddd");
+                    }
+                }else if(responseJsonAsString.length() == 2) {
+                    JSONObject info = responseJsonAsString.getJSONObject(0);
+                    friend_info.add(info.getString("user_id"));
+                    friend_info.add(info.getString("username"));
+                    friend_info.add(info.getString("desc"));
+                    friend_info.add(info.getString("phone"));
+                    friend_info.add(info.getString("email"));
+                    friend_info.add(info.getString("status"));
+                    setupInfo();
                 }
-            }else if(responseJsonAsString.length() == 2) {
-                JSONObject info = responseJsonAsString.getJSONObject(0);
-                friend_info.add(info.getString("user_id"));
-                friend_info.add(info.getString("username"));
-                friend_info.add(info.getString("desc"));
-                friend_info.add(info.getString("phone"));
-                friend_info.add(info.getString("email"));
-                friend_info.add(info.getString("status"));
-                setupInfo();
+            } catch (UnirestException e) {
+                throw new RuntimeException(e);
             }
-        } catch (UnirestException e) {
-            throw new RuntimeException(e);
+        }else if(friend_id[0].equals("gp")){
+            String url = "http://127.0.0.1:8080/group/groupinfo/" + friend_id[1];
+//        String url = "http://192.168.1.112:8080/user/" + friend_id;
+            try {
+                HttpResponse<JsonNode> apiResponse = Unirest.get(url)
+                        .header("accept", "application/json")
+                        .asJson();
+                JSONArray responseJsonAsString = apiResponse.getBody().getArray();
+                if(responseJsonAsString.length() == 1) {
+                    JSONObject msg = responseJsonAsString.getJSONObject(0);
+                    if(msg.get("status").equals(false)){
+                        System.out.println("Ddd");
+                    }
+                }else if(responseJsonAsString.length() == 2) {
+                    JSONObject info = responseJsonAsString.getJSONObject(0);
+                    friend_info.add(info.getString("group_id"));
+                    friend_info.add(info.getString("group_name"));
+                    friend_info.add(info.getString("group_desc"));
+                    friend_info.add(info.getString("group_date"));
+                    friend_info.add(info.getString("group_admin_id"));
+                    setupInfo();
+                }
+            } catch (UnirestException e) {
+                throw new RuntimeException(e);
+            }
         }
         this.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 chat.setUsername(friend_info.get(1));
-                chat.setFriend_id(friend_id);
+                chat.setFriend_id(friend_id[0] + "#" + friend_id[1]);
             }
         });
     }

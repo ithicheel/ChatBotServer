@@ -30,6 +30,7 @@ public class FriendList extends VBox {
         // get friend list
         ArrayList<String> list = new ArrayList<>();
         String url = "http://localhost:8080/user/friendlist/" + users.get_user_id();
+//        String url = "http://192.168.1.112:8080/user/friendlist/" + users.get_user_id();
         try {
             HttpResponse<JsonNode> apiResponse = Unirest.get(url)
                     .header("accept", "application/json")
@@ -37,7 +38,24 @@ public class FriendList extends VBox {
             JSONArray responseJsonAsString = apiResponse.getBody().getArray();
             if(responseJsonAsString.length() > 1){
                 for(int i = 0; i<responseJsonAsString.length() - 1; i++){
-                    list.add(responseJsonAsString.get(i).toString());
+                    list.add("fr=" + responseJsonAsString.get(i).toString());
+                }
+            }else {
+                System.out.println("friend list avahad aldaa garlaa.");
+            }
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
+        }
+        String url1 = "http://127.0.0.1:8080/group/groups/" + users.get_user_id();
+//        String url = "http://192.168.1.112:8080/user/friendlist/" + users.get_user_id();
+        try {
+            HttpResponse<JsonNode> apiResponse1 = Unirest.get(url1)
+                    .header("accept", "application/json")
+                    .asJson();
+            JSONArray responseJsonAsString1 = apiResponse1.getBody().getArray();
+            if(responseJsonAsString1.length() > 1){
+                for(int i = 0; i<responseJsonAsString1.length() - 1; i++){
+                    list.add("gp=" + responseJsonAsString1.get(i).toString());
                 }
             }else {
                 System.out.println("friend list avahad aldaa garlaa.");
@@ -56,6 +74,11 @@ public class FriendList extends VBox {
             lists.getChildren().add(fli[fl]);
             fl++;
         }
+        System.out.println(list);
+
+
+
+
         sp.setContent(lists);
         this.getChildren().add(sp);
     }

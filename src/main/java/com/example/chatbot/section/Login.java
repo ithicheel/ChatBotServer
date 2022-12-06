@@ -30,6 +30,7 @@ public class Login extends Stage {
         Scene loginScene = new Scene(CreateInterFace(), 300, 300);
         loginBtn.setOnAction(actionEvent -> {
             String url = "http://localhost:8080/user/login/" + utf.getText() + "/" + ptf.getText();
+//            String url = "http://192.168.1.112:8080/user/login/" + utf.getText() + "/" + ptf.getText();
              try {
                 HttpResponse<JsonNode> apiResponse = Unirest.post(url)
                         .header("accept", "application/json")
@@ -67,8 +68,6 @@ public class Login extends Stage {
             } catch (UnirestException e) {
                 throw new RuntimeException(e);
             }
-
-
         });
         // Setup
         this.setTitle("Login");
